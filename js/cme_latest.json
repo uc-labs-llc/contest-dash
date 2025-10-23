@@ -1,0 +1,20 @@
+{
+  "activity_id": "2025-10-23T14:12:00-CME-001",
+  "start_time": "2025-10-23T14:12Z",
+  "source_location": "N25W140",
+  "speed": 335.0,
+  "type": "S",
+  "latitude": -10.0,
+  "longitude": 148.0,
+  "half_angle": 40.0,
+  "note": "CME visible to the west in SOHO LASCO C2 and STEREO A COR2. The source is likely an eruption from former AR 14246, which rotated off of the Earth-facing disk on 2025-10-18. Opening field lines and post eruption arcades are visible near the west limb in STEREO A EUV 195 imagery starting at 2025-10-23T13:55Z.",
+  "instruments": [
+    {
+      "displayName": "SOHO: LASCO/C2"
+    },
+    {
+      "displayName": "STEREO A: SECCHI/COR2"
+    }
+  ],
+  "fetch_time": "2025-10-23T16:48:11.021110"
+}
