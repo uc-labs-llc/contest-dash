@@ -318,7 +318,134 @@
                         <div class="degree-symbol" id="degreeSymbol">°</div>
                     </div>
                 </div>
-                <br>
+<!-- 
+    Copy the contents of this <script> block into your main dashboard HTML file.
+    Ensure this script runs AFTER ALL the following elements are in the DOM:
+    #temperature, #humidity, #windSpeed, #pressure, #dewPoint, #uvIndex
+
+    *** IMPORTANT: You must click the button to start the voice schedule due to browser autoplay rules. ***
+-->
+<button id="start-voice-btn" onclick="startTemperatureScheduler()" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px;">
+    Start Voice Announcer
+</button>
+
+<script>
+    // --- Configuration ---
+    // ANNOUNCEMENT INTERVAL SET TO 30 MINUTES (1800000 milliseconds)
+    const ANNOUNCEMENT_INTERVAL_MS = 1800000; 
+    let schedulerStarted = false;
+
+    /**
+     * Speaks the given text using the browser's native Speech Synthesis API (zero network calls).
+     */
+    function speakNatively(textToSpeak) {
+        if (!('speechSynthesis' in window)) {
+            console.error("Browser does not support native Speech Synthesis.");
+            return;
+        }
+        
+        // Cancel any previous speaking to ensure the latest update is heard
+        window.speechSynthesis.cancel(); 
+
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        
+        // Optional: Set voice parameters for clarity
+        // Note: The specific voice is browser-dependent (e.g., 'Google US English' on Chrome)
+        utterance.rate = 1.0; // Speed
+        utterance.pitch = 1.0; // Tone
+        
+        console.log("Starting native voice playback...");
+        window.speechSynthesis.speak(utterance);
+    }
+
+    /**
+     * Reads all key dashboard metrics for a comprehensive announcement.
+     * @returns {string | null} The generated phrase, or null if key elements are missing.
+     */
+    function readFullDashboardMetrics() {
+        // Retrieve values, falling back to 'unknown' or 'zero' if not found
+        // The .textContent is safe because the elements are already rendered on the page.
+        const temp = document.getElementById('temperature')?.textContent?.trim() || 'unknown';
+        const humidity = document.getElementById('humidity')?.textContent?.trim() || 'unknown';
+        const windSpeed = document.getElementById('windSpeed')?.textContent?.trim() || 'unknown';
+        const pressure = document.getElementById('pressure')?.textContent?.trim() || 'unknown';
+        const dewPoint = document.getElementById('dewPoint')?.textContent?.trim() || 'unknown';
+        const uvIndex = document.getElementById('uvIndex')?.textContent?.trim() || 'zero';
+
+        // We skip the whole announcement if temperature is completely missing
+        if (temp === 'unknown') {
+            console.warn("Critical element for announcement (#temperature) not found or empty. Cannot generate speech.");
+            return null;
+        }
+
+        // Start the phrase
+        let phrase = "Weather conditions update: ";
+
+        // Append metrics with phrasing and pauses (commas)
+        phrase += `The current temperature is ${parseInt(temp)} degrees Fahrenheit, `;
+        
+        if (humidity !== 'unknown') {
+            phrase += `Humidity is ${parseInt(humidity)} percent, `;
+        }
+        
+        if (windSpeed !== 'unknown') {
+            phrase += `Wind speed is ${parseInt(windSpeed)} miles per hour, `;
+        }
+        
+        if (pressure !== 'unknown') {
+            // Using the full word 'hectopascals' for clearer pronunciation
+            phrase += `Barometric pressure is ${parseInt(pressure)} hectopascals. `;
+        }
+        
+        if (dewPoint !== 'unknown') {
+            phrase += `The Dew Point is ${parseInt(dewPoint)} degrees. `;
+        }
+        
+        if (uvIndex !== 'zero') {
+            phrase += `The UV Index is ${parseInt(uvIndex)}.`;
+        }
+        
+        return phrase;
+    }
+
+    /**
+     * Executes the full announcement sequence.
+     */
+    function announceDashboardMetrics() {
+        const phrase = readFullDashboardMetrics();
+        if (phrase) {
+            // CALLS THE NATIVE BROWSER VOICE
+            speakNatively(phrase); 
+        }
+    }
+
+    // --- Scheduling ---
+
+    // This function starts the voice scheduler
+    function startTemperatureScheduler() {
+        // Prevent starting the scheduler twice
+        if (schedulerStarted) return;
+        schedulerStarted = true;
+
+        // 1. Call immediately on click to satisfy the browser's autoplay policy
+        announceDashboardMetrics();
+        
+        // 2. Set the recurring interval to read all metrics.
+        setInterval(announceDashboardMetrics, ANNOUNCEMENT_INTERVAL_MS);
+
+        // 3. Hide the button after it's clicked
+        const btn = document.getElementById('start-voice-btn');
+        if (btn) btn.style.display = 'none';
+
+        console.log(`Voice scheduler started. Next announcement in ${ANNOUNCEMENT_INTERVAL_MS / 60000} minutes.`);
+    }
+
+    // Note: The scheduler is only started via the button click.
+</script>
+
+
+
+		<br>
                 <div class="footer">
                     <div class="digital-readout-bar" id="date-readout">
                         <div class="readout-segment" id="dow-segment"></div>
