@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 // --- Configuration ---
 // Hardcoded recipient for all emails from the system
-$DEFAULT_RECIPIENT = 'uclabs.llc@gmail.com'; 
+$DEFAULT_RECIPIENT = 'your email address'; 
 $SENDER_EMAIL = 'no-reply@yourdomain.com'; // CRITICAL: Update this to a valid sender email address
 
 // --- Utility function to format the weather report into an HTML list ---
