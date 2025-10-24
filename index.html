@@ -328,20 +328,17 @@
 
 <!-- 
     VOICE ANNOUNCER INTEGRATION START:
-    This button must be clicked by the user to start the 30-minute announcement schedule.
+    The button has been re-added and modified to start the scheduler due to browser autoplay policy restrictions. 
 -->
-<button id="start-voice-btn" onclick="startTemperatureScheduler()" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px;">
-    Start Voice Announcer
-</button>
+<center><button id="startAnnouncerButton" class="action-button" style="margin-top: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; border: none; border-radius: 8px; background-color: #0096FF; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Start Voice Announcer</button></center>
 
 <script>
     // --- Configuration ---
-    // ANNOUNCEMENT INTERVAL SET TO 30 MINUTES (1800000 milliseconds)
+    // Standard announcement interval is 30 minutes (used for recurrence after the first scheduled announcement)
     const ANNOUNCEMENT_INTERVAL_MS = 1800000; 
-    let schedulerStarted = false;
 
     /**
-     * Speaks the given text using the browser's native Speech Synthesis API (zero network calls).
+     * Speaks the given text using the browser's native Speech Synthesis API.
      */
     function speakNatively(textToSpeak) {
         if (!('speechSynthesis' in window)) {
@@ -353,11 +350,9 @@
         window.speechSynthesis.cancel(); 
 
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        
         // Optional: Set voice parameters for clarity
-        // Note: The specific voice is browser-dependent (e.g., 'Google US English' on Chrome)
-        utterance.rate = 1.0; // Speed
-        utterance.pitch = 1.0; // Tone
+        utterance.rate = 1.0; 
+        utterance.pitch = 1.0; 
         
         console.log("Starting native voice playback...");
         window.speechSynthesis.speak(utterance);
@@ -369,16 +364,16 @@
      */
     function readFullDashboardMetrics() {
         // Retrieve values, falling back to 'unknown' or 'zero' if not found
-        // NOTE: We are using the IDs defined in the main dashboard structure (e.g., wind-speed).
+        // IMPORTANT: These IDs match the elements in bottom-row-column-2:
         const temp = document.getElementById('temperature')?.textContent?.trim() || 'unknown';
         const humidity = document.getElementById('humidity')?.textContent?.trim() || 'unknown';
-        const windSpeed = document.getElementById('wind-speed')?.textContent?.trim() || 'unknown'; // FIXED to 'wind-speed'
+        const windSpeed = document.getElementById('wind-speed')?.textContent?.trim() || 'unknown'; 
         const pressure = document.getElementById('pressure')?.textContent?.trim() || 'unknown';
-        const dewPoint = document.getElementById('dew-point')?.textContent?.trim() || 'unknown'; // FIXED to 'dew-point'
-        const uvIndex = document.getElementById('uv-index')?.textContent?.trim() || 'zero'; // FIXED to 'uv-index'
+        const dewPoint = document.getElementById('dew-point')?.textContent?.trim() || 'unknown'; 
+        const uvIndex = document.getElementById('uv-index')?.textContent?.trim() || 'zero'; 
 
         // We skip the whole announcement if temperature is completely missing
-        if (temp === 'unknown') {
+        if (temp === 'unknown' || temp === '--') {
             console.warn("Critical element for announcement (#temperature) not found or empty. Cannot generate speech.");
             return null;
         }
@@ -389,33 +384,33 @@
         // Append metrics with phrasing and pauses (commas)
         phrase += `The current temperature is ${parseInt(temp)} degrees Fahrenheit, `;
         
-        if (humidity !== 'unknown') {
+        if (humidity !== 'unknown' && humidity !== '--') {
             phrase += `Humidity is ${parseInt(humidity)} percent, `;
         }
         
-        if (windSpeed !== 'unknown') {
-            // Need to parse out units like 'mph' if present in the text content
+        if (windSpeed !== 'unknown' && windSpeed !== '--') {
+            // Parse integer value, ignoring units
             const windValue = parseInt(windSpeed);
             if (!isNaN(windValue)) {
                 phrase += `Wind speed is ${windValue} miles per hour, `;
             }
         }
         
-        if (pressure !== 'unknown') {
-            const pressureValue = parseInt(pressure);
+        if (pressure !== 'unknown' && pressure !== '--') {
+            const pressureValue = parseFloat(pressure); // Use float for pressure like 1012.5
             if (!isNaN(pressureValue)) {
-                phrase += `Barometric pressure is ${pressureValue} hectopascals. `;
+                phrase += `Barometric pressure is ${pressureValue.toFixed(1)} hectopascals. `;
             }
         }
         
-        if (dewPoint !== 'unknown') {
+        if (dewPoint !== 'unknown' && dewPoint !== '--') {
             const dewPointValue = parseInt(dewPoint);
             if (!isNaN(dewPointValue)) {
                 phrase += `The Dew Point is ${dewPointValue} degrees. `;
             }
         }
         
-        if (uvIndex !== 'zero') {
+        if (uvIndex !== 'zero' && uvIndex !== '--') {
             const uvIndexValue = parseInt(uvIndex);
             if (!isNaN(uvIndexValue)) {
                 phrase += `The UV Index is ${uvIndexValue}.`;
@@ -436,28 +431,81 @@
         }
     }
 
-    // --- Scheduling ---
+    /**
+     * Calculates the time delay until the next nearest half-hour mark (:00 or :30).
+     * @returns {number} Delay in milliseconds.
+     */
+    function calculateInitialDelay() {
+        const now = new Date();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        const ms = now.getMilliseconds();
 
-    // This function starts the voice scheduler
-    function startTemperatureScheduler() {
-        // Prevent starting the scheduler twice
-        if (schedulerStarted) return;
-        schedulerStarted = true;
-
-        // 1. Call immediately on click to satisfy the browser's autoplay policy
-        announceDashboardMetrics();
+        let targetMinutes;
         
-        // 2. Set the recurring interval to read all metrics.
-        setInterval(announceDashboardMetrics, ANNOUNCEMENT_INTERVAL_MS);
+        // Determine the next target (either :00 or :30)
+        if (minutes < 30) {
+            targetMinutes = 30; // Target is the next half hour (e.g., 11:30)
+        } else {
+            targetMinutes = 60; // Target is the next hour (e.g., 12:00)
+        }
 
-        // 3. Hide the button after it's clicked
-        const btn = document.getElementById('start-voice-btn');
-        if (btn) btn.style.display = 'none';
+        // Calculate minutes remaining until the target
+        const minutesToWait = targetMinutes - minutes;
+        
+        // Convert to total milliseconds to wait
+        // Subtract current seconds and milliseconds
+        let delay = minutesToWait * 60 * 1000 - (seconds * 1000 + ms);
 
-        console.log(`Voice scheduler started. Next announcement in ${ANNOUNCEMENT_INTERVAL_MS / 60000} minutes.`);
+        // If delay is negative (i.e., we are 1 second past the target), schedule for the next interval
+        if (delay <= 0) {
+             delay += ANNOUNCEMENT_INTERVAL_MS; // Add a full 30 mins
+        }
+        
+        return delay;
     }
 
-    // Note: The scheduler is only started via the button click.
+
+    /**
+     * Starts the absolute time scheduler after a user interaction (button click).
+     */
+    function startAbsoluteScheduler() {
+        const button = document.getElementById('startAnnouncerButton');
+        
+        // Disable the button to ensure it's a one-time activation
+        if (button) {
+            button.disabled = true;
+            button.textContent = 'Voice Scheduler Running...';
+            button.style.backgroundColor = '#4CAF50'; // Green to indicate running
+            button.style.cursor = 'default';
+        }
+
+        // Calculate how long to wait until the first target (:00 or :30)
+        const initialDelay = calculateInitialDelay();
+        
+        console.log(`Voice scheduler initialized. First announcement will align with the absolute clock in ${Math.ceil(initialDelay / 60000)} minutes at the next :00 or :30 mark.`);
+
+        // Set a timeout for the first announcement
+        setTimeout(() => {
+            // First announcement fires
+            announceDashboardMetrics();
+            
+            // Start the regular 30-minute interval immediately after the first announcement
+            setInterval(announceDashboardMetrics, ANNOUNCEMENT_INTERVAL_MS);
+            
+            console.log("Regular 30-minute interval established for :00 and :30 marks.");
+        }, initialDelay);
+    }
+    
+    // Listen for the button click to start the scheduler (required by Autoplay Policy)
+    window.addEventListener('load', () => {
+        const button = document.getElementById('startAnnouncerButton');
+        if (button) {
+            button.addEventListener('click', startAbsoluteScheduler);
+        } else {
+            console.error("Announcer start button not found.");
+        }
+    });
 </script>
 
 
