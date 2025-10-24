@@ -44,6 +44,10 @@
   <a href="../nasa/dashboard.html" class="nav-item" data-page="page6">
     <span>NASA</span>
   </a>
+<a href="sprinklers.html" class="nav-item" data-page="page7">
+    <span>Sprinkler</span>
+  </a>
+
 
 </div>
 		<!-- Top Section with 3 Columns -->
@@ -270,6 +274,7 @@
                             <img src="icons/rain.svg" alt="Rain (1h)" class="data-icon">
                             <span class="data-label">Rain (1h):</span>
                         </div>
+                        <!-- IMPORTANT ID FOR NEW RAIN LOGIC -->
                         <span class="data-value" id="rain-1h">--</span>
                     </div>
                    <div class="data-row">
@@ -277,6 +282,7 @@
                     <img src="icons/rain.svg" alt="Total Rain" class="data-icon">
                     <span class="data-label">Total Rainfall:</span>
                     </div>
+                    <!-- CRITICAL ID for data sharing via localStorage -->
                     <span class="data-value" id="total-rainfall">--</span>
                     </div>
 
@@ -326,11 +332,7 @@
                     </div>
                 </div>
 
-<!-- 
-    VOICE ANNOUNCER INTEGRATION START:
-    The button has been re-added and modified to start the scheduler due to browser autoplay policy restrictions. 
--->
-<center><button id="startAnnouncerButton" class="action-button" style="margin-top: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; border: none; border-radius: 8px; background-color: #0096FF; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Start Voice Announcer</button></center>
+<button id="startAnnouncerButton" class="action-button" style="margin-top: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; border: none; border-radius: 8px; background-color: #0096FF; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Start Voice Announcer</button>
 
 <script>
     // --- Configuration ---
@@ -359,18 +361,30 @@
     }
 
     /**
-     * Reads all key dashboard metrics for a comprehensive announcement.
+     * Reads all key dashboard metrics for a comprehensive announcement, 
+     * including a rain warning if applicable.
      * @returns {string | null} The generated phrase, or null if key elements are missing.
      */
     function readFullDashboardMetrics() {
         // Retrieve values, falling back to 'unknown' or 'zero' if not found
-        // IMPORTANT: These IDs match the elements in bottom-row-column-2:
         const temp = document.getElementById('temperature')?.textContent?.trim() || 'unknown';
         const humidity = document.getElementById('humidity')?.textContent?.trim() || 'unknown';
         const windSpeed = document.getElementById('wind-speed')?.textContent?.trim() || 'unknown'; 
         const pressure = document.getElementById('pressure')?.textContent?.trim() || 'unknown';
         const dewPoint = document.getElementById('dew-point')?.textContent?.trim() || 'unknown'; 
         const uvIndex = document.getElementById('uv-index')?.textContent?.trim() || 'zero'; 
+        const rain1hText = document.getElementById('rain-1h')?.textContent?.trim() || '--';
+
+        // --- NEW RAIN CHECK LOGIC ---
+        // Attempt to parse the rain value. If it's a number > 0, we issue the warning.
+        const rain1hValue = parseFloat(rain1hText.replace(/[^0-9.]/g, '')); // Strip units/text for pure number
+        let rainWarning = "";
+
+        if (!isNaN(rain1hValue) && rain1hValue > 0) {
+            rainWarning = "Maybe you should bring an umbrella with you! ";
+        }
+        // --- END NEW RAIN CHECK ---
+
 
         // We skip the whole announcement if temperature is completely missing
         if (temp === 'unknown' || temp === '--') {
@@ -378,8 +392,8 @@
             return null;
         }
 
-        // Start the phrase
-        let phrase = "Weather conditions update: ";
+        // Start the phrase with the rain warning (if applicable)
+        let phrase = rainWarning + "Weather conditions update: ";
 
         // Append metrics with phrasing and pauses (commas)
         phrase += `The current temperature is ${parseInt(temp)} degrees Fahrenheit, `;
@@ -496,6 +510,28 @@
             console.log("Regular 30-minute interval established for :00 and :30 marks.");
         }, initialDelay);
     }
+
+    // Function to continuously monitor and save rainfall data to localStorage
+    function monitorAndSaveRainfall() {
+        const rainfallElement = document.getElementById('total-rainfall');
+        if (rainfallElement) {
+            const rainfallValue = rainfallElement.textContent.trim();
+            // Check if it's a valid value before saving (not '--' or empty)
+            if (rainfallValue && rainfallValue !== '--') {
+                try {
+                    // Save the raw text value (e.g., "0.2 in") to localStorage
+                    localStorage.setItem('dashboardTotalRainfall', rainfallValue);
+                    // console.log('Rainfall saved to localStorage:', rainfallValue);
+                } catch (e) {
+                    console.error('Error saving to localStorage:', e);
+                }
+            }
+        }
+    }
+
+    // Start monitoring every 5 seconds (assuming weather data updates within this time)
+    setInterval(monitorAndSaveRainfall, 5000); 
+
     
     // Listen for the button click to start the scheduler (required by Autoplay Policy)
     window.addEventListener('load', () => {
