@@ -103,4 +103,3 @@ Launch: Simply open the index.html file in any modern web browser.
 Note: Due to the scope of external API calls, optimal performance is achieved when running through a local development server.
 
 
-Note: Due to the scope of external API calls, optimal
