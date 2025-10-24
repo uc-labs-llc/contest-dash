@@ -14,9 +14,7 @@
         crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
-<!-- 2. Moment Timezone (Timezone Support) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.45/moment-timezone-with-data.min.js"></script>
-<!-- 3. SunCalc (Astronomical Calculations - CORRECTED PATH) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
 
 </head>
@@ -50,8 +48,7 @@
 
 
 </div>
-		<!-- Top Section with 3 Columns -->
-        <div class="top-section">
+		<div class="top-section">
             <div class="top-row-column-left">
                 <div class="clock-container">
                     <div id="time">
@@ -164,13 +161,11 @@
                 <div class="forecast-header">
                 </div>
                 <div class="forecast-container" id="weather-forecast">
-                    <!-- Forecast days will be inserted here by JavaScript -->
-                </div>
+                    </div>
             </div>
         </div>
 <script src="js/forecast.js"></script>
 
-        <!-- Bottom Section with 5 Columns -->
         <div class="bottom-section">
             <div class="bottom-row-column-1">
                 <div class="column-header">
@@ -191,7 +186,6 @@
                             <img src="icons/temperature.svg" alt="Temperature" class="data-icon">
                             <span class="data-label">Temperature:</span>
                         </div>
-                        <!-- ID for temperature from Column 2, used as a fallback but main script uses 'temperature' in col 3 -->
                         <span class="data-value" id="temperature-main">--</span>
                     </div>
                     <div class="data-row">
@@ -204,7 +198,6 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/humidity.svg" alt="Humidity" class="data-icon">
-                            <!-- CRITICAL ID for voice -->
                             <span class="data-label">Humidity:</span>
                         </div>
                         <span class="data-value" id="humidity">--</span>
@@ -212,7 +205,6 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/pressure.svg" alt="Pressure" class="data-icon">
-                            <!-- CRITICAL ID for voice -->
                             <span class="data-label">Pressure:</span>
                         </div>
                         <span class="data-value" id="pressure">--</span>
@@ -220,7 +212,6 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/wind.svg" alt="Wind Speed" class="data-icon">
-                            <!-- CRITICAL ID for voice (uses hyphen) -->
                             <span class="data-label">Wind Speed:</span>
                         </div>
                         <span class="data-value" id="wind-speed">--</span>
@@ -249,7 +240,6 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/uv-index.svg" alt="UV Index" class="data-icon">
-                            <!-- CRITICAL ID for voice (uses hyphen) -->
                             <span class="data-label">UV Index:</span>
                         </div>
                         <span class="data-value" id="uv-index">--</span>
@@ -257,7 +247,6 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/dew-point.svg" alt="Dew Point" class="data-icon">
-                            <!-- CRITICAL ID for voice (uses hyphen) -->
                             <span class="data-label">Dew Point:</span>
                         </div>
                         <span class="data-value" id="dew-point">--</span>
@@ -274,7 +263,6 @@
                             <img src="icons/rain.svg" alt="Rain (1h)" class="data-icon">
                             <span class="data-label">Rain (1h):</span>
                         </div>
-                        <!-- IMPORTANT ID FOR NEW RAIN LOGIC -->
                         <span class="data-value" id="rain-1h">--</span>
                     </div>
                    <div class="data-row">
@@ -282,12 +270,10 @@
                     <img src="icons/rain.svg" alt="Total Rain" class="data-icon">
                     <span class="data-label">Total Rainfall:</span>
                     </div>
-                    <!-- CRITICAL ID for data sharing via localStorage -->
                     <span class="data-value" id="total-rainfall">--</span>
                     </div>
 
-                    <!-- Add these after your existing weather data -->
-<div class="data-row">
+                    <div class="data-row">
     <div class="data-icon-label">
         <img src="icons/sun-intensity.svg" alt="Solar Radiation" class="data-icon">
         <span class="data-label">Solar Radiation:</span>
@@ -326,18 +312,28 @@
                 </div>
                 <div class="temperature-display">
                     <div class="temperature-container">
-                        <!-- CRITICAL ID for voice (Main Display) -->
                         <div class="temperature-text" id="temperature">88</div>
                         <div class="degree-symbol" id="degreeSymbol">°</div>
                     </div>
                 </div>
 
-<button id="startAnnouncerButton" class="action-button" style="margin-top: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; border: none; border-radius: 8px; background-color: #0096FF; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Start Voice Announcer</button>
+		<center style="display: flex; justify-content: center; gap: 10px;">
+            <button id="startAnnouncerButton" class="action-button" style="margin-top: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; border: none; border-radius: 8px; background-color: #0096FF; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Start Voice Announcer</button>
+            <button id="startEmailSchedulerButton" class="action-button" style="margin-top: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; border: none; border-radius: 8px; background-color: #4CAF50; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Start Weather Email Scheduler</button>
+        </center>
 
 <script>
     // --- Configuration ---
-    // Standard announcement interval is 30 minutes (used for recurrence after the first scheduled announcement)
+    // Standard announcement/scheduler interval is 30 minutes (used for recurrence after the first scheduled run)
     const ANNOUNCEMENT_INTERVAL_MS = 1800000; 
+    const PHP_ENDPOINT_URL = 'send_email.php'; 
+    
+    // List of all weather metric IDs to save for the email report
+    const WEATHER_METRIC_IDS = [
+        'temperature-main', 'feels-like', 'humidity', 'pressure', 'wind-speed', 
+        'wind-direction', 'visibility', 'cloudiness', 'uv-index', 'dew-point', 
+        'wind-gust', 'rain-1h', 'total-rainfall', 'solar-radiation', 'snow-1h'
+    ];
 
     /**
      * Speaks the given text using the browser's native Speech Synthesis API.
@@ -348,11 +344,9 @@
             return;
         }
         
-        // Cancel any previous speaking to ensure the latest update is heard
         window.speechSynthesis.cancel(); 
 
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        // Optional: Set voice parameters for clarity
         utterance.rate = 1.0; 
         utterance.pitch = 1.0; 
         
@@ -363,10 +357,10 @@
     /**
      * Reads all key dashboard metrics for a comprehensive announcement, 
      * including a rain warning if applicable.
+     * (Retained the original Voice Announcer logic)
      * @returns {string | null} The generated phrase, or null if key elements are missing.
      */
     function readFullDashboardMetrics() {
-        // Retrieve values, falling back to 'unknown' or 'zero' if not found
         const temp = document.getElementById('temperature')?.textContent?.trim() || 'unknown';
         const humidity = document.getElementById('humidity')?.textContent?.trim() || 'unknown';
         const windSpeed = document.getElementById('wind-speed')?.textContent?.trim() || 'unknown'; 
@@ -375,27 +369,19 @@
         const uvIndex = document.getElementById('uv-index')?.textContent?.trim() || 'zero'; 
         const rain1hText = document.getElementById('rain-1h')?.textContent?.trim() || '--';
 
-        // --- NEW RAIN CHECK LOGIC ---
-        // Attempt to parse the rain value. If it's a number > 0, we issue the warning.
-        const rain1hValue = parseFloat(rain1hText.replace(/[^0-9.]/g, '')); // Strip units/text for pure number
+        const rain1hValue = parseFloat(rain1hText.replace(/[^0-9.]/g, '')); 
         let rainWarning = "";
 
         if (!isNaN(rain1hValue) && rain1hValue > 0) {
             rainWarning = "Maybe you should bring an umbrella with you! ";
         }
-        // --- END NEW RAIN CHECK ---
 
-
-        // We skip the whole announcement if temperature is completely missing
         if (temp === 'unknown' || temp === '--') {
             console.warn("Critical element for announcement (#temperature) not found or empty. Cannot generate speech.");
             return null;
         }
 
-        // Start the phrase with the rain warning (if applicable)
         let phrase = rainWarning + "Weather conditions update: ";
-
-        // Append metrics with phrasing and pauses (commas)
         phrase += `The current temperature is ${parseInt(temp)} degrees Fahrenheit, `;
         
         if (humidity !== 'unknown' && humidity !== '--') {
@@ -403,7 +389,6 @@
         }
         
         if (windSpeed !== 'unknown' && windSpeed !== '--') {
-            // Parse integer value, ignoring units
             const windValue = parseInt(windSpeed);
             if (!isNaN(windValue)) {
                 phrase += `Wind speed is ${windValue} miles per hour, `;
@@ -411,7 +396,7 @@
         }
         
         if (pressure !== 'unknown' && pressure !== '--') {
-            const pressureValue = parseFloat(pressure); // Use float for pressure like 1012.5
+            const pressureValue = parseFloat(pressure); 
             if (!isNaN(pressureValue)) {
                 phrase += `Barometric pressure is ${pressureValue.toFixed(1)} hectopascals. `;
             }
@@ -440,7 +425,6 @@
     function announceDashboardMetrics() {
         const phrase = readFullDashboardMetrics();
         if (phrase) {
-            // CALLS THE NATIVE BROWSER VOICE
             speakNatively(phrase); 
         }
     }
@@ -459,21 +443,16 @@
         
         // Determine the next target (either :00 or :30)
         if (minutes < 30) {
-            targetMinutes = 30; // Target is the next half hour (e.g., 11:30)
+            targetMinutes = 30; 
         } else {
-            targetMinutes = 60; // Target is the next hour (e.g., 12:00)
+            targetMinutes = 60; 
         }
 
-        // Calculate minutes remaining until the target
         const minutesToWait = targetMinutes - minutes;
-        
-        // Convert to total milliseconds to wait
-        // Subtract current seconds and milliseconds
         let delay = minutesToWait * 60 * 1000 - (seconds * 1000 + ms);
 
-        // If delay is negative (i.e., we are 1 second past the target), schedule for the next interval
         if (delay <= 0) {
-             delay += ANNOUNCEMENT_INTERVAL_MS; // Add a full 30 mins
+             delay += ANNOUNCEMENT_INTERVAL_MS; 
         }
         
         return delay;
@@ -486,60 +465,154 @@
     function startAbsoluteScheduler() {
         const button = document.getElementById('startAnnouncerButton');
         
-        // Disable the button to ensure it's a one-time activation
         if (button) {
             button.disabled = true;
             button.textContent = 'Voice Scheduler Running...';
-            button.style.backgroundColor = '#4CAF50'; // Green to indicate running
+            button.style.backgroundColor = '#4CAF50'; 
             button.style.cursor = 'default';
         }
 
-        // Calculate how long to wait until the first target (:00 or :30)
         const initialDelay = calculateInitialDelay();
         
-        console.log(`Voice scheduler initialized. First announcement will align with the absolute clock in ${Math.ceil(initialDelay / 60000)} minutes at the next :00 or :30 mark.`);
+        console.log(`Voice scheduler initialized. First announcement will align with the absolute clock in ${Math.ceil(initialDelay / 60000)} minutes.`);
 
-        // Set a timeout for the first announcement
         setTimeout(() => {
-            // First announcement fires
             announceDashboardMetrics();
-            
-            // Start the regular 30-minute interval immediately after the first announcement
             setInterval(announceDashboardMetrics, ANNOUNCEMENT_INTERVAL_MS);
-            
             console.log("Regular 30-minute interval established for :00 and :30 marks.");
         }, initialDelay);
     }
+    
+    // ----------------------------------------------------------------------
+    // --- NEW WEATHER EMAIL SCHEDULER LOGIC --------------------------------
+    // ----------------------------------------------------------------------
 
-    // Function to continuously monitor and save rainfall data to localStorage
-    function monitorAndSaveRainfall() {
-        const rainfallElement = document.getElementById('total-rainfall');
-        if (rainfallElement) {
-            const rainfallValue = rainfallElement.textContent.trim();
-            // Check if it's a valid value before saving (not '--' or empty)
-            if (rainfallValue && rainfallValue !== '--') {
-                try {
-                    // Save the raw text value (e.g., "0.2 in") to localStorage
-                    localStorage.setItem('dashboardTotalRainfall', rainfallValue);
-                    // console.log('Rainfall saved to localStorage:', rainfallValue);
-                } catch (e) {
-                    console.error('Error saving to localStorage:', e);
-                }
+    /**
+     * Sends the current weather report via email API using data from localStorage.
+     */
+    function sendWeatherReportEmail() {
+        let weatherMetrics = {};
+        try {
+            // Retrieve all collected metrics from the ongoing monitor
+            const metricsJson = localStorage.getItem('dashboardWeatherMetrics');
+            if (metricsJson) {
+                weatherMetrics = JSON.parse(metricsJson);
+            }
+        } catch (e) {
+            console.error("Could not parse dashboardWeatherMetrics from localStorage:", e);
+        }
+        
+        // Define the payload for the PHP script
+        const payload = {
+            event_type: 'WEATHER_REPORT', // <-- CRITICAL FLAG for PHP
+            weather_report: weatherMetrics 
+        };
+        
+        fetch(PHP_ENDPOINT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const now = new Date().toLocaleTimeString();
+            if (data.status === 'success') {
+                console.log(`[${now}] Weather Report Email Sent: SUCCESS!`);
+            } else {
+                console.error(`[${now}] Weather Report Email Sent: FAILED: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error('Weather Email Fetch/Server Error:', error);
+        });
+    }
+
+    /**
+     * Starts the absolute time scheduler for sending weather report emails.
+     */
+    function startWeatherEmailScheduler() {
+        const button = document.getElementById('startEmailSchedulerButton');
+        
+        if (button) {
+            button.disabled = true;
+            button.textContent = 'Email Scheduler Running...';
+            button.style.backgroundColor = '#307D33'; 
+            button.style.cursor = 'default';
+        }
+
+        const initialDelay = calculateInitialDelay();
+        
+        console.log(`Email scheduler initialized. First weather report email will send in ${Math.ceil(initialDelay / 60000)} minutes at the next :00 or :30 mark.`);
+
+        // Set a timeout for the first email
+        setTimeout(() => {
+            sendWeatherReportEmail();
+            
+            // Start the regular 30-minute interval immediately after the first email
+            setInterval(sendWeatherReportEmail, ANNOUNCEMENT_INTERVAL_MS);
+            
+            console.log("Regular 30-minute email interval established.");
+        }, initialDelay);
+    }
+
+
+    /**
+     * Continuously monitors and saves all weather metrics to localStorage 
+     * for use by both the Sprinkler page and the Email Scheduler.
+     */
+    function monitorAndSaveWeatherMetrics() {
+        let allMetrics = {};
+        let dataFound = false;
+        
+        for (const id of WEATHER_METRIC_IDS) {
+            const element = document.getElementById(id);
+            const labelElement = element ? element.parentElement.querySelector('.data-label') : null;
+            
+            const value = element ? element.textContent.trim() : '--';
+            const label = labelElement ? labelElement.textContent.trim().replace(/:$/, '') : id;
+            
+            if (value && value !== '--') {
+                allMetrics[label] = value;
+                dataFound = true;
+            } else {
+                allMetrics[label] = '--';
+            }
+        }
+        
+        // Also save the specific total rainfall metric for the sprinkler page
+        const totalRainfallValue = allMetrics['Total Rainfall'] || '--';
+        if (totalRainfallValue && totalRainfallValue !== '--') {
+            try {
+                localStorage.setItem('dashboardTotalRainfall', totalRainfallValue);
+            } catch (e) {
+                console.error('Error saving dashboardTotalRainfall to localStorage:', e);
+            }
+        }
+
+        // Save the comprehensive weather report
+        if (dataFound) {
+            try {
+                localStorage.setItem('dashboardWeatherMetrics', JSON.stringify(allMetrics));
+            } catch (e) {
+                console.error('Error saving dashboardWeatherMetrics to localStorage:', e);
             }
         }
     }
 
     // Start monitoring every 5 seconds (assuming weather data updates within this time)
-    setInterval(monitorAndSaveRainfall, 5000); 
+    setInterval(monitorAndSaveWeatherMetrics, 5000); 
 
     
     // Listen for the button click to start the scheduler (required by Autoplay Policy)
     window.addEventListener('load', () => {
-        const button = document.getElementById('startAnnouncerButton');
-        if (button) {
-            button.addEventListener('click', startAbsoluteScheduler);
-        } else {
-            console.error("Announcer start button not found.");
+        const announcerButton = document.getElementById('startAnnouncerButton');
+        if (announcerButton) {
+            announcerButton.addEventListener('click', startAbsoluteScheduler);
+        }
+        
+        const emailButton = document.getElementById('startEmailSchedulerButton');
+        if (emailButton) {
+            emailButton.addEventListener('click', startWeatherEmailScheduler);
         }
     });
 </script>
@@ -620,7 +693,6 @@
                         Air quality data not available
                     </div>
 		 <div class="air-quality-container">
-    <!-- Existing elements: aqi-value, aqi-category, pm25, etc. -->
     <canvas id="aqiTrendChart" width="800" height="400"></canvas>
 </div>
 
@@ -685,4 +757,3 @@
 
 </body>
 </html>
-
