@@ -187,6 +187,7 @@
                             <img src="icons/temperature.svg" alt="Temperature" class="data-icon">
                             <span class="data-label">Temperature:</span>
                         </div>
+                        <!-- ID for temperature from Column 2, used as a fallback but main script uses 'temperature' in col 3 -->
                         <span class="data-value" id="temperature-main">--</span>
                     </div>
                     <div class="data-row">
@@ -199,6 +200,7 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/humidity.svg" alt="Humidity" class="data-icon">
+                            <!-- CRITICAL ID for voice -->
                             <span class="data-label">Humidity:</span>
                         </div>
                         <span class="data-value" id="humidity">--</span>
@@ -206,6 +208,7 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/pressure.svg" alt="Pressure" class="data-icon">
+                            <!-- CRITICAL ID for voice -->
                             <span class="data-label">Pressure:</span>
                         </div>
                         <span class="data-value" id="pressure">--</span>
@@ -213,6 +216,7 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/wind.svg" alt="Wind Speed" class="data-icon">
+                            <!-- CRITICAL ID for voice (uses hyphen) -->
                             <span class="data-label">Wind Speed:</span>
                         </div>
                         <span class="data-value" id="wind-speed">--</span>
@@ -241,6 +245,7 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/uv-index.svg" alt="UV Index" class="data-icon">
+                            <!-- CRITICAL ID for voice (uses hyphen) -->
                             <span class="data-label">UV Index:</span>
                         </div>
                         <span class="data-value" id="uv-index">--</span>
@@ -248,6 +253,7 @@
                     <div class="data-row">
                         <div class="data-icon-label">
                             <img src="icons/dew-point.svg" alt="Dew Point" class="data-icon">
+                            <!-- CRITICAL ID for voice (uses hyphen) -->
                             <span class="data-label">Dew Point:</span>
                         </div>
                         <span class="data-value" id="dew-point">--</span>
@@ -261,7 +267,7 @@
                     </div>
                     <div class="data-row">
                         <div class="data-icon-label">
-                            <img src="icons/rain.svg" alt="Rain" class="data-icon">
+                            <img src="icons/rain.svg" alt="Rain (1h)" class="data-icon">
                             <span class="data-label">Rain (1h):</span>
                         </div>
                         <span class="data-value" id="rain-1h">--</span>
@@ -314,16 +320,15 @@
                 </div>
                 <div class="temperature-display">
                     <div class="temperature-container">
+                        <!-- CRITICAL ID for voice (Main Display) -->
                         <div class="temperature-text" id="temperature">88</div>
                         <div class="degree-symbol" id="degreeSymbol">°</div>
                     </div>
                 </div>
-<!-- 
-    Copy the contents of this <script> block into your main dashboard HTML file.
-    Ensure this script runs AFTER ALL the following elements are in the DOM:
-    #temperature, #humidity, #windSpeed, #pressure, #dewPoint, #uvIndex
 
-    *** IMPORTANT: You must click the button to start the voice schedule due to browser autoplay rules. ***
+<!-- 
+    VOICE ANNOUNCER INTEGRATION START:
+    This button must be clicked by the user to start the 30-minute announcement schedule.
 -->
 <button id="start-voice-btn" onclick="startTemperatureScheduler()" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 20px;">
     Start Voice Announcer
@@ -364,13 +369,13 @@
      */
     function readFullDashboardMetrics() {
         // Retrieve values, falling back to 'unknown' or 'zero' if not found
-        // The .textContent is safe because the elements are already rendered on the page.
+        // NOTE: We are using the IDs defined in the main dashboard structure (e.g., wind-speed).
         const temp = document.getElementById('temperature')?.textContent?.trim() || 'unknown';
         const humidity = document.getElementById('humidity')?.textContent?.trim() || 'unknown';
-        const windSpeed = document.getElementById('windSpeed')?.textContent?.trim() || 'unknown';
+        const windSpeed = document.getElementById('wind-speed')?.textContent?.trim() || 'unknown'; // FIXED to 'wind-speed'
         const pressure = document.getElementById('pressure')?.textContent?.trim() || 'unknown';
-        const dewPoint = document.getElementById('dewPoint')?.textContent?.trim() || 'unknown';
-        const uvIndex = document.getElementById('uvIndex')?.textContent?.trim() || 'zero';
+        const dewPoint = document.getElementById('dew-point')?.textContent?.trim() || 'unknown'; // FIXED to 'dew-point'
+        const uvIndex = document.getElementById('uv-index')?.textContent?.trim() || 'zero'; // FIXED to 'uv-index'
 
         // We skip the whole announcement if temperature is completely missing
         if (temp === 'unknown') {
@@ -389,20 +394,32 @@
         }
         
         if (windSpeed !== 'unknown') {
-            phrase += `Wind speed is ${parseInt(windSpeed)} miles per hour, `;
+            // Need to parse out units like 'mph' if present in the text content
+            const windValue = parseInt(windSpeed);
+            if (!isNaN(windValue)) {
+                phrase += `Wind speed is ${windValue} miles per hour, `;
+            }
         }
         
         if (pressure !== 'unknown') {
-            // Using the full word 'hectopascals' for clearer pronunciation
-            phrase += `Barometric pressure is ${parseInt(pressure)} hectopascals. `;
+            const pressureValue = parseInt(pressure);
+            if (!isNaN(pressureValue)) {
+                phrase += `Barometric pressure is ${pressureValue} hectopascals. `;
+            }
         }
         
         if (dewPoint !== 'unknown') {
-            phrase += `The Dew Point is ${parseInt(dewPoint)} degrees. `;
+            const dewPointValue = parseInt(dewPoint);
+            if (!isNaN(dewPointValue)) {
+                phrase += `The Dew Point is ${dewPointValue} degrees. `;
+            }
         }
         
         if (uvIndex !== 'zero') {
-            phrase += `The UV Index is ${parseInt(uvIndex)}.`;
+            const uvIndexValue = parseInt(uvIndex);
+            if (!isNaN(uvIndexValue)) {
+                phrase += `The UV Index is ${uvIndexValue}.`;
+            }
         }
         
         return phrase;
@@ -584,3 +601,4 @@
 
 </body>
 </html>
+
