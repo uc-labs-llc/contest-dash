@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 
 // --- CONFIGURATION ---
 // 🚨 IMPORTANT: Replace with the actual recipient email address
-$recipient_email = 'uclabs.llc@gmail.com'; 
+$recipient_email = 'your email address'; 
 $sender_email    = 'alert_system@yourdashboard.com'; 
 // -----------------------
 
