@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Irrigation Control System 1.0 (BETA)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- NEW: Chart.js library for graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -131,12 +130,8 @@
 </head>
 <body class="p-8">
     
-    <!-- NO MORE OUTER WRAPPER. PANELS ARE NOW FIXED TO THE CORNERS. -->
-
-    <!-- Panel 1 (Left) - Controller: NOW FIXED TOP-LEFT -->
     <div id="controller-panel" class="win-box w-full lg:w-[400px] fixed top-8 left-8 z-20">
         
-        <!-- Title Bar -->
         <div class="win-title-bar flex justify-between items-center">
             <span>Irrigation Control Panel - Water Conservation Mode</span>
             <div class="flex space-x-1">
@@ -146,11 +141,41 @@
             </div>
         </div>
 
-        <!-- Content Area -->
         <div class="p-6">
             <h1 class="text-lg font-bold mb-4 text-center text-blue-800">Automated Sprinkler Override Status</h1>
             
             <div class="win-box p-4 mb-6">
+                <p class="text-sm mb-2 font-bold text-blue-800">Day of Week Scheduling:</p>
+                <div class="flex flex-wrap justify-between items-center mb-4">
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" id="day-0" value="0" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="day-0" class="text-xs">Sun</label>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" id="day-1" value="1" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="day-1" class="text-xs">Mon</label>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" id="day-2" value="2" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="day-2" class="text-xs">Tue</label>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" id="day-3" value="3" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="day-3" class="text-xs">Wed</label>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" id="day-4" value="4" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="day-4" class="text-xs">Thu</label>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" id="day-5" value="5" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="day-5" class="text-xs">Fri</label>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" id="day-6" value="6" checked class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="day-6" class="text-xs">Sat</label>
+                    </div>
+                </div>
                 <p class="text-sm mb-2">Configure Water Conservation Threshold:</p>
                 <div class="flex items-center space-x-4">
                     <label for="threshold" class="text-sm">Threshold (in.):</label>
@@ -161,11 +186,9 @@
                 <div class="flex items-center space-x-4">
                     <label for="rainfall" class="text-sm">Total Rainfall (in.):</label>
                     <input type="number" id="rainfall" value="0.2" step="0.1" class="win-box p-1 w-20 text-right text-black">
-                    <!-- Status message updates based on whether data is auto-loaded or manual -->
                     <span class="text-xs text-red-700 font-bold" id="manualInputStatus">* Manual Input Required</span>
                 </div>
                 
-                <!-- COST SIMULATOR INPUTS -->
                 <p class="text-sm mt-4 font-bold text-blue-800">Sprinkler Cost & Usage Configuration:</p>
                 <div class="mt-2 space-y-2">
                     <div class="flex items-center space-x-4">
@@ -187,14 +210,12 @@
                 </button>
             </div>
 
-            <!-- COST/USAGE DISPLAY -->
             <div class="win-box p-4 bg-yellow-100 mb-6 border-yellow-500 border-2">
                 <h2 class="font-bold mb-2 text-yellow-700">Running Cost Simulator:</h2>
                 <p class="text-base font-mono">Total Gallons Used: <span id="gallonsUsed" class="font-bold text-blue-800">0.00</span> gal</p>
                 <p class="text-base font-mono">Total Running Cost: <span id="totalCostDisplay" class="font-bold text-red-700">$0.000</span></p>
             </div>
             
-            <!-- Status Display -->
             <div class="win-box p-4 bg-gray-200">
                 <h2 class="font-bold mb-2">System Status:</h2>
                 <div class="flex items-center space-x-4">
@@ -206,9 +227,7 @@
         </div>
     </div>
     
-    <!-- Panel 2 (Right) - CHARTS AND GRAPHS: NOW FIXED TOP-RIGHT -->
     <div id="charts-panel" class="win-box w-full lg:w-[400px] fixed top-8 right-8 z-20">
-        <!-- Title Bar -->
         <div class="win-title-bar flex justify-between items-center">
             <span>Real-Time Telemetry Data (Usage)</span>
             <div class="flex space-x-1">
@@ -218,16 +237,13 @@
             </div>
         </div>
         
-        <!-- Chart Content Area -->
         <div class="p-4">
             <h2 class="text-md font-bold mb-4 text-center text-blue-800">Irrigation Consumption Trend</h2>
             
-            <!-- Gallons Used Chart -->
             <div class="chart-container">
                 <canvas id="gallonsChart"></canvas>
             </div>
 
-            <!-- Running Cost Chart -->
             <div class="chart-container">
                 <canvas id="costChart"></canvas>
             </div>
@@ -235,8 +251,6 @@
     </div>
 
     
-    <!-- Sprinkler Simulation Elements (Remain as originally positioned) -->
-    <!-- Sprinkler 1 (Left) -->
     <div id="sprinkler1" class="sprinkler-head" style="left: 20%; top: 75%;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
             <path d="M11.25 10.5C11.25 10.5 11.25 11.25 11.25 12C11.25 12.75 11.25 13.5 11.25 13.5H12.75C12.75 13.5 12.75 12.75 12.75 12C12.75 11.25 12.75 10.5 12.75 10.5H11.25Z" fill="#3B82F6"/>
@@ -244,8 +258,7 @@
         </svg>
     </div>
 
-    <!-- Sprinkler 2 (Right) -->
-    <div id="sprinkler2" class="sprinkler-head" style="right: 15%; top: 60%;">
+    <div id="sprinkler2" class="sprinkler-head" style="right: 15%; top: 75%;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
             <path d="M11.25 10.5C11.25 10.5 11.25 11.25 11.25 12C11.25 12.75 11.25 13.5 11.25 13.5H12.75C12.75 13.5 12.75 12.75 12.75 12C12.75 11.25 12.75 10.5 12.75 10.5H11.25Z" fill="#3B82F6"/>
             <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6.75a.75.75 0 0 0 1.5 0V6ZM17.25 12a.75.75 0 0 1-.75.75H6a.75.75 0 0 1 0-1.5h10.5a.75.75 0 0 1 .75.75Z" clip-rule="evenodd" />
@@ -253,6 +266,24 @@
     </div>
 
 <script>
+    // --- STATE VARIABLES & CONFIGURATION ---
+    const EMAIL_RECIPIENT = 'your mail address'; 
+    // Pointing to the dedicated PHP file
+    const PHP_ENDPOINT_URL = 'send_sprinkler_email.php'; 
+    
+    let intervalId = null; 
+    let costIntervalId = null; 
+    let totalGallonsUsed = 0;
+    const RECURRING_CHECK_INTERVAL_MS = 60000; // Check every 60 seconds
+
+    // --- CHART DATA ARRAYS ---
+    let timeLabels = [];
+    let gallonsData = [];
+    let costData = [];
+    let gallonsChart;
+    let costChart;
+    // ---------------------------------------------------
+
     // --- DOM REFERENCES ---
     const thresholdInput = document.getElementById('threshold');
     const rainfallInput = document.getElementById('rainfall');
@@ -270,20 +301,59 @@
     const flowRateInput = document.getElementById('flowRate');
     const gallonsUsedDisplay = document.getElementById('gallonsUsed');
     const totalCostDisplay = document.getElementById('totalCostDisplay');
+    // Day of Week Checkboxes
+    const dayCheckboxes = [0, 1, 2, 3, 4, 5, 6].map(day => document.getElementById(`day-${day}`));
 
-    // --- STATE VARIABLES & CONFIGURATION ---
-    const RECURRING_CHECK_INTERVAL_MS = 15000; // Check every 15 seconds
-    let intervalId = null; // for water drop animation
-    let costIntervalId = null; // for cost calculation
-    let totalGallonsUsed = 0;
+    
+    /**
+     * Sends an email notification by making an HTTP POST request to the server-side PHP script.
+     */
+    function sendSprinklerActivationEmail(rainfall, threshold) {
+        let weatherMetrics = {};
+        try {
+            // Get the comprehensive weather report object from index.html's localStorage
+            const metricsJson = localStorage.getItem('dashboardWeatherMetrics');
+            if (metricsJson) {
+                weatherMetrics = JSON.parse(metricsJson);
+            }
+        } catch (e) {
+            console.error("Could not parse dashboardWeatherMetrics from localStorage:", e);
+            systemOutput.textContent += ' [NOTIFICATION: Local storage weather data corrupt.]';
+        }
 
-    // --- CHART DATA ARRAYS (for real-time plotting) ---
-    let timeLabels = [];
-    let gallonsData = [];
-    let costData = [];
-    let gallonsChart;
-    let costChart;
-    // ---------------------------------------------------
+        const payload = {
+            recipient: EMAIL_RECIPIENT,
+            rainfall: rainfall.toFixed(2),
+            threshold: threshold.toFixed(2),
+            weather_report: weatherMetrics 
+        };
+        
+        fetch(PHP_ENDPOINT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (!response.ok) {
+                 throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                systemOutput.textContent += ' [NOTIFICATION: Email API SUCCESS! Check inbox.]';
+            } else {
+                systemOutput.textContent += ` [NOTIFICATION: Email API FAILED: ${data.message}]`;
+            }
+        })
+        .catch(error => {
+            console.error('Email Fetch/Server Error:', error);
+            systemOutput.textContent += ' [NOTIFICATION: Email API ERROR! Check console/PHP server configuration.]';
+        });
+    }
+
 
     /**
      * Initializes the two Chart.js graphs on the right panel.
@@ -292,7 +362,7 @@
         const defaultChartOptions = {
             responsive: true,
             maintainAspectRatio: false,
-            animation: false, // Turn off animation for real-time updates
+            animation: false, 
             scales: {
                 x: {
                     display: true,
@@ -310,7 +380,6 @@
             }
         };
 
-        // 1. Gallons Used Chart
         gallonsChart = new Chart(document.getElementById('gallonsChart'), {
             type: 'line',
             data: {
@@ -318,7 +387,7 @@
                 datasets: [{
                     label: 'Gallons Used (gal)',
                     data: gallonsData,
-                    borderColor: '#3B82F6', // Blue
+                    borderColor: '#3B82F6', 
                     backgroundColor: 'rgba(59, 130, 246, 0.2)',
                     fill: true,
                     tension: 0.1,
@@ -335,7 +404,6 @@
             }
         });
 
-        // 2. Running Cost Chart
         costChart = new Chart(document.getElementById('costChart'), {
             type: 'line',
             data: {
@@ -343,7 +411,7 @@
                 datasets: [{
                     label: 'Running Cost ($)',
                     data: costData,
-                    borderColor: '#EF4444', // Red
+                    borderColor: '#EF4444', 
                     backgroundColor: 'rgba(239, 68, 68, 0.2)',
                     fill: true,
                     tension: 0.1,
@@ -361,8 +429,9 @@
         });
     }
 
+
     /**
-     * Creates and animates a single "water drop" element. (Unchanged logic)
+     * Creates and animates a single "water drop" element.
      */
     function createDrop(origin) {
         const drop = document.createElement('div');
@@ -407,7 +476,7 @@
     }
 
     /**
-     * Sends the current usage and cost data back to the dashboard using localStorage. (Unchanged logic)
+     * Sends the current usage and cost data back to the dashboard using localStorage.
      */
     function reportUsageToDashboard(gallons, cost) {
         localStorage.setItem('sprinklerGallonsUsed', gallons.toFixed(2));
@@ -416,9 +485,18 @@
 
     /**
      * Calculates and updates the running cost of the system.
-     * UPDATED: Now collects time-series data and updates the charts.
      */
     function calculateCost() {
+        // Only run if the sprinklers are active
+        if (!sprinklerLed.classList.contains('led-on')) {
+            // Stop cost tracking if sprinklers are off
+            if (costIntervalId) {
+                clearInterval(costIntervalId);
+                costIntervalId = null;
+            }
+            return;
+        }
+
         const costPerGallon = parseFloat(costPerGallonInput.value) || 0.005;
         const flowRateGPM = parseFloat(flowRateInput.value) || 10;
         
@@ -428,17 +506,15 @@
         totalGallonsUsed += gallonsUsedInSecond;
         const currentTotalCost = totalGallonsUsed * costPerGallon;
 
-        // Update display
+        // Update display and charts
         gallonsUsedDisplay.textContent = totalGallonsUsed.toFixed(2);
         totalCostDisplay.textContent = `$${currentTotalCost.toFixed(3)}`; 
         
-        // --- NEW: Chart Data Collection ---
         const now = new Date();
         timeLabels.push(now.toLocaleTimeString());
         gallonsData.push(totalGallonsUsed);
         costData.push(currentTotalCost);
         
-        // Keep the graph manageable (e.g., last 30 seconds of data)
         const maxDataPoints = 30;
         if (timeLabels.length > maxDataPoints) {
             timeLabels.shift();
@@ -446,10 +522,8 @@
             costData.shift();
         }
 
-        // Update charts
         if (gallonsChart) gallonsChart.update();
         if (costChart) costChart.update();
-        // ----------------------------------
 
         // Push data to the dashboard's storage
         reportUsageToDashboard(totalGallonsUsed, currentTotalCost);
@@ -457,25 +531,30 @@
 
 
     /**
-     * Starts the continuous sprinkler simulation.
+     * Starts the continuous sprinkler simulation and cost tracking.
      */
     function startSprinklers() {
+        // If already running, do nothing
+        if (intervalId) return; 
+
         sprinklerHeads.forEach(head => head.classList.add('active'));
         
-        if (intervalId) clearInterval(intervalId);
+        // Start water spray simulation
         intervalId = setInterval(() => {
             sprinklerHeads.forEach(head => {
                 createDrop(head);
             });
         }, 15); 
         
-        // Start cost calculation loop (runs every 1000ms = 1 second)
-        if (costIntervalId) clearInterval(costIntervalId);
-        costIntervalId = setInterval(calculateCost, 1000); 
+        // Start cost tracking if not already running
+        if (!costIntervalId) {
+            costIntervalId = setInterval(calculateCost, 1000); 
+            systemOutput.textContent += ' Cost tracking started.';
+        }
     }
 
     /**
-     * Stops the continuous sprinkler simulation.
+     * Stops the continuous sprinkler simulation and cost tracking.
      */
     function stopSprinklers() {
         sprinklerHeads.forEach(head => head.classList.remove('active'));
@@ -484,28 +563,27 @@
             intervalId = null;
         }
 
-        // Stop cost calculation
-        if (costIntervalId) {
-            clearInterval(costIntervalId);
-            costIntervalId = null;
-            systemOutput.textContent += ' Cost tracking stopped.';
-        }
+        // Cost tracking will stop itself on the next calculateCost interval
         
-        // When stopped, report the final values one last time
+        // Final report usage update
         reportUsageToDashboard(totalGallonsUsed, totalGallonsUsed * (parseFloat(costPerGallonInput.value) || 0));
     }
 
 
     /**
-     * Main logic to check rainfall and update status. (Unchanged logic)
+     * Main logic to check rainfall and update status. 
+     * @param {boolean} skipActivation - If true, the system checks status but does not call startSprinklers().
      */
-    function checkSprinklers() {
+    function checkSprinklers(skipActivation = false) { // MODIFIED: Added optional parameter
+        // --- 1. Get Rainfall Data ---
         const thresholdValue = parseFloat(thresholdInput.value) || 0.5; 
         thresholdInput.value = thresholdValue.toFixed(1);
 
         let rainfallTextFromStorage = localStorage.getItem('dashboardTotalRainfall');
         let rainfallValue;
+        let outputMessages = []; 
 
+        // Attempt to pull data from the main dashboard
         if (rainfallTextFromStorage) {
             const numericMatch = rainfallTextFromStorage.match(/(\d+\.?\d*)/);
             if (numericMatch) {
@@ -516,12 +594,14 @@
                 manualInputStatus.classList.remove('text-red-700');
                 manualInputStatus.classList.add('text-green-700');
             } else {
+                // Dashboard data found but is invalid/not numeric
                 rainfallValue = parseFloat(rainfallInput.value);
                 manualInputStatus.textContent = ' (* Manual Input Required: Dashboard data invalid)';
                 manualInputStatus.classList.remove('text-green-700');
                 manualInputStatus.classList.add('text-red-700');
             }
         } else {
+            // No Dashboard data found, rely on manual input
             rainfallValue = parseFloat(rainfallInput.value);
             manualInputStatus.textContent = ' (* Manual Input Required: No Dashboard data found)';
             manualInputStatus.classList.remove('text-green-700');
@@ -539,44 +619,104 @@
             return;
         }
 
+        // --- 2. Check Day of Week Override ---
+        const today = new Date().getDay(); 
+        const dayCheckbox = dayCheckboxes[today];
+        const isDayAllowed = dayCheckbox ? dayCheckbox.checked : false;
+
+        if (!isDayAllowed) {
+            stopSprinklers();
+            statusMessage.textContent = 'STATUS: Sprinklers OFFLINE (Scheduled)';
+            statusMessage.classList.add('text-blue-600');
+            statusMessage.classList.remove('text-red-600', 'text-green-600');
+            
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const todayName = dayNames[today];
+            systemOutput.textContent = `Schedule override: Today (${todayName}) is disabled. Irrigation system safely disabled.`;
+            sprinklerLed.classList.remove('led-on');
+            sprinklerLed.classList.add('led-off');
+            return; 
+        } else {
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            outputMessages.push(`Schedule: Today (${dayNames[today]}) is enabled.`);
+        }
+
+        // --- 3. Check Rainfall Threshold ---
         if (rainfallValue < thresholdValue) {
-            // ACTIVATE SPRINKLERS
+            
+            // --- CRITICAL CHANGE: Check if activation should be skipped ---
+            if (skipActivation) {
+                 stopSprinklers(); // Ensure sprinklers are off during the initial load check
+                 statusMessage.textContent = 'STATUS: Monitoring (Activation Pending)';
+                 statusMessage.classList.add('text-blue-600');
+                 statusMessage.classList.remove('text-red-600', 'text-green-600');
+                 outputMessages.push(`Rainfall is below threshold, but activation is **SKIPPED** during initial load.`);
+                 systemOutput.textContent = outputMessages.join(' ');
+                 sprinklerLed.classList.remove('led-on');
+                 sprinklerLed.classList.add('led-off');
+                 return; // EXIT HERE on initial load
+            }
+            
+            // ACTIVATE SPRINKLERS (Only if skipActivation is false - i.e., button click or recurring check)
             startSprinklers();
+            
+            // Only send an email if the system was NOT already running (prevent spam)
+            if (!sprinklerLed.classList.contains('led-on')) {
+                 sendSprinklerActivationEmail(rainfallValue, thresholdValue);
+            }
+            
             statusMessage.textContent = 'STATUS: Sprinklers ACTIVATED!';
             statusMessage.classList.add('text-green-600');
             statusMessage.classList.remove('text-red-600', 'text-blue-600');
-            systemOutput.textContent = `Rainfall (${rainfallValue.toFixed(2)} in.) is below threshold (${thresholdValue.toFixed(2)} in.). Irrigation initiated. Cost tracking started and reporting to Dashboard.`;
+            
+            outputMessages.push(`Rainfall (${rainfallValue.toFixed(2)} in.) is below threshold (${thresholdValue.toFixed(2)} in.). Irrigation initiated. Cost tracking started and reporting to Dashboard.`);
+            systemOutput.textContent = outputMessages.join(' ');
+
             sprinklerLed.classList.add('led-on');
             sprinklerLed.classList.remove('led-off');
 
         } else {
-            // DO NOT ACTIVATE SPRINKLERS
+            // DO NOT ACTIVATE SPRINKLERS - Rainfall Saturated
             stopSprinklers();
             statusMessage.textContent = 'STATUS: Sprinklers OFFLINE (Saturated)';
             statusMessage.classList.add('text-blue-600');
             statusMessage.classList.remove('text-red-600', 'text-green-600');
-            systemOutput.textContent = `Rainfall (${rainfallValue.toFixed(2)} in.) is sufficient. Irrigation system safely disabled.`;
+            
+            outputMessages.push(`Rainfall (${rainfallValue.toFixed(2)} in.) is sufficient. Irrigation system safely disabled.`);
+            systemOutput.textContent = outputMessages.join(' ');
+            
             sprinklerLed.classList.remove('led-on');
             sprinklerLed.classList.add('led-off');
         }
     }
 
     // Event Listener for Manual Check
-    checkButton.addEventListener('click', checkSprinklers);
+    // When the button is clicked, skipActivation is UNDEFINED (which defaults to false)
+    checkButton.addEventListener('click', () => checkSprinklers(false)); 
     
     // Initial and Recurring Auto-Check
     window.onload = () => {
         // 1. Initialize Charts
         initializeCharts();
         
-        // 2. Run the check immediately on load to get the latest data
-        checkSprinklers(); 
+        // 2. Set an initial status message immediately (Awaiting data/check)
+        statusMessage.textContent = 'STATUS: Awaiting Initial Check...';
+        statusMessage.classList.remove('text-green-600', 'text-red-600');
+        statusMessage.classList.add('text-blue-600');
         
-        // 3. Set up a recurring check to simulate continuous monitoring
-        setInterval(checkSprinklers, RECURRING_CHECK_INTERVAL_MS); 
+        // 3. Set up a short, randomized delay for the *first* check (1 to 4 seconds)
+        const initialDelay = Math.random() * 3000 + 1000; 
+        
+        console.log(`Sprinkler system initialization complete. Starting first automated check in ${initialDelay.toFixed(0)}ms.`);
+
+        setTimeout(() => {
+            // CRITICAL CHANGE: Run the first check with skipActivation = TRUE
+            checkSprinklers(true); 
+            
+            // 4. Set up the regular recurring check. This will use the default (false) for skipActivation.
+            setInterval(() => checkSprinklers(false), RECURRING_CHECK_INTERVAL_MS); 
+        }, initialDelay);
     }
 </script>
-
 </body>
 </html>
-
