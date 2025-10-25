@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Power Estimator</title>
+    
+    <link rel="stylesheet" href="css/solar-calc.css">
+ 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.45/moment-timezone-with-data.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+        <div class="sidebar">
+          <img src="images/notb.png" alt="Logo" class="sidebar-logo">
+          <a href="index.html" class="nav-item" data-page="home">
+            <span>Home</span>
+          </a>
+          <a href="con-sites.html" class="nav-item" data-page="page2">
+            <span>Con-Sites</span>
+          </a>
+          <a href="satellites.html" class="nav-item" data-page="page3">
+            <span>Satellites</span>
+          </a>
+          <a href="suntracker.html" class="nav-item" data-page="page4">
+            <span>SunTracker</span>
+          </a>
+        <a href="moontracker.html" class="nav-item" data-page="page5">
+            <span>MoonTracker</span>
+          </a>
+          <a href="../nasa/dashboard.html" class="nav-item" data-page="page6">
+            <span>NASA</span>
+          </a>
+          <a href="sprinklers.html" class="nav-item" data-page="page7">
+            <span>Irrigation</span>
+          </a>
+          <a href="iot_tester.html" class="nav-item" data-page="page8">
+            <span>API EndPoints</span>
+          </a>
+        </div>
+    </div> 
+
+`
+		<center>            <h2>Los Ebanos, Texas -- Solar Calculations</h2>  </center>
+            <div class="clock-container">
+                <div id="time">
+                    <div class="circle" style="--color: #0096FF">
+                        <div class="dots h_dot"></div>
+                        <svg>
+                            <circle cx="35" cy="35" r="35"></circle>
+                            <circle cx="35" cy="35" r="35" id="hh"></circle>
+                        </svg>
+                        <div id="hours">00</div>
+                    </div>
+                    <div class="circle" style="--color: #0096FF">
+                        <div class="dots m_dot"></div>
+                        <svg>
+                            <circle cx="35" cy="35" r="35"></circle>
+                            <circle cx="35" cy="35" r="35" id="mm"></circle>
+                        </svg>
+                        <div id="minutes">00</div>
+                    </div>
+                    <div class="circle" style="--color: #0096FF">
+                        <div class="dots s_dot"></div>
+                        <svg>
+                            <circle cx="35" cy="35" r="35"></circle>
+                            <circle cx="35" cy="35" r="35" id="ss"></circle>
+                        </svg>
+                        <div id="seconds">00</div>
+                    </div>
+                    <div class="ap">
+                        <div id="ampm">AM</div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">Day/Night Progress (Texas)</div>
+                    <div class="progress-bar">
+                        <div class="night-segment" id="night"></div>
+                        <div class="day-segment" id="day"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span id="night-text">Night</span>
+                        <span id="day-text">Day</span>
+                    </div>
+                </div>
+            <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+            <script src="js/clock.js"></script>
+        </div>
+	<br>
+	<div id="solar-app-container" class="solar-container-card"> 
+ 
+        <div class="main-two-column-layout">
+
+            <div id="left-panel">
+                
+                <div class="solar-data-header">            
+                    <h1 class="solar-header-title">Hourly Solar Radiation & Power</h1>
+                    
+                    <form id="solarCalcForm" class="solar-input-form">
+                        <label for="calc-panels">Panels:</label><input type="text" inputmode="numeric" id="calc-panels" required value="10">
+                        <label for="calc-watts">Watts (STC):</label><input type="text" inputmode="numeric" id="calc-watts" required value="400">
+                        <label for="calc-latitude">Lat:</label><input type="text" inputmode="decimal" id="calc-latitude" required step="any" value="26.2434">
+                        <label for="calc-longitude">Lon:</label><input type="text" inputmode="decimal" id="calc-longitude" required step="any" value="-98.5617">
+                    </form>
+                    
+                    <div id="solar-location-display" class="solar-location-display">Loading...</div>        
+                </div>
+
+                <div class="solar-status-panel">            
+                    <span class="solar-status-label">Current Solar Radiation:</span>            
+                    <span id="current-radiation-display" class="solar-current-radiation">-- W/m²</span>        
+                </div>
+                
+                <div class="solar-status-panel">            
+                    <span class="solar-status-label">Estimated Power Output:</span>            
+                    <span id="calculated-currentPower" class="solar-current-radiation">-- W</span>        
+                </div>
+                
+                <div class="solar-status-panel">            
+                    <span class="solar-status-label">Optimal Annual Tilt:</span>            
+                    <span id="calculated-bestAngle" class="solar-current-radiation">-- °</span>        
+                </div>
+
+            </div> <div id="right-panel">
+                
+                <div class="solar-chart-container">            
+                    <div class="solar-chart-title">Bar Chart: Hourly Magnitude (Watts)</div>            
+                    <canvas id="bar-chart"></canvas>        
+                </div>
+                
+                <div class="solar-chart-container">            
+                    <div class="solar-chart-title">Line Chart: Full Day Progression (Watts)</div>            
+                    <canvas id="line-chart"></canvas>        
+                </div>
+
+            </div> </div> <div class="solar-footer">            
+            <span id="app-status">Initializing app...</span>            
+            <span id="last-updated-time"></span>        
+        </div>    
+    </div>
+    
+    <script src="js/calc-config.js"></script> 
+    <script src="js/power-calc.js"></script> 
+    <script src="js/data-charts.js"></script>
+</body>
+</html>
