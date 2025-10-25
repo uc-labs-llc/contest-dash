@@ -1,0 +1,412 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Deep space background */
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    color: #e8eaf6;
+    min-height: 95vh;
+    padding: 0px;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.solar-container-card {
+    /* This element is now only for centering and defining max width. */
+    width: 100%;
+    max-width: 1400px; 
+    margin: 0 auto; 
+    text-align: left; 
+}
+
+/* --- ISOLATED & FIXED-WIDTH CSS GRID LAYOUT --- */
+.main-two-column-layout {
+    display: grid;
+    /* FIXED PIXEL widths: 350px for Status, 750px for Charts */
+    grid-template-columns: 600px 750px; 
+    gap: 100px; 
+    margin-bottom: 10px;
+    align-items: start; 
+}
+
+/* LEFT COLUMN: Styles applied directly here to make it an independent card */
+#left-panel {
+    /* Card Styling */
+    background-color: #333;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+
+    /* Fixed Width */
+    width: 600px; 
+}
+
+#right-panel {
+    width: 750px; 
+    display: block; 
+}
+
+/* --- ISOLATED Status Panel Layout (using simple float/clear) --- */
+.solar-status-panel {
+    padding: 10px 0;
+    border-bottom: 1px dashed #444;
+}
+
+.solar-status-label {
+    float: left;
+    font-weight: bold;
+    color: #ccc;
+}
+
+.solar-current-radiation {
+    float: right;
+    color: #2ecc71;
+    font-size: 1.1em;
+}
+
+/* Clearing the float after each status panel */
+.solar-status-panel::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+/* --- END Status Panel Layout --- */
+
+
+/* ISOLATED Chart Container Styling (Parent of the Canvas) */
+.solar-chart-container {
+    background-color: #444;
+    padding: 15px;
+    border-radius: 8px;
+    /* FIXED HEIGHT: Ensures no blank space */
+    height: 310px; 
+    margin-bottom: 20px; 
+    text-align: center; 
+    display: block;
+}
+
+/* ISOLATED CANVAS STYLING - FORCES CHART TO FILL CONTAINER */
+.solar-chart-container canvas {
+    /* Canvas element must be block to accept auto margin centering */
+    display: block;
+    /* NEW CRITICAL FIX: Forces the chart to use 100% of the available width */
+    width: 100%; 
+    /* Centers the block element horizontally */
+    margin: 0 auto; 
+}
+
+/* Remove bottom margin from the last chart container for clean footer space */
+#right-panel .solar-chart-container:last-child {
+    margin-bottom: 0;
+}
+
+.solar-data-header {
+    border-bottom: 1px solid #555;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.solar-header-title {
+    color: #f39c12;
+    margin-top: 0;
+    font-size: 1.8em;
+}
+
+.solar-input-form input {
+    margin: 0 10px 10px 5px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #555;
+    background-color: #444;
+    color: #fff;
+    width: 60px;
+    text-align: center;
+}
+
+.solar-location-display {
+    font-style: italic;
+    color: #bbb;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+.solar-error {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.solar-chart-title {
+    font-size: 1.1em;
+    color: #bbb;
+    margin-bottom: 10px;
+}
+
+.solar-footer {
+    margin-top: 20px;
+    font-size: 0.8em;
+    color: #777;
+    overflow: auto; 
+    padding-top: 10px;
+    border-top: 1px solid #555;
+}
+
+.solar-footer span {
+    float: left;
+}
+
+#last-updated-time {
+    float: right;
+}
+
+.sidebar {
+    width: 40px; /* Initial compact width */
+    height: 100vh;
+    background: transparent; /* Remove background box */
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px; /* Adjusted padding */
+    box-shadow: 0px 0 0px rgba(0, 0, 0, 0.5);
+    transition: width 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar:hover {
+    width: 200px; /* Expanded width on hover */
+}
+
+.sidebar-logo {
+    width: 80px; /* Larger logo size */
+    height: 60px;
+    margin-bottom: 20px;
+    background-color: transparent; 
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.sidebar:hover .sidebar-logo {
+    transform: scale(1.1); /* Logo grows on hover */
+}
+
+.nav-item {
+    width: 100%; /* Takes full width of the sidebar */
+    padding: 15px 0;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #ffffff; /* Link text color */
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(10px); /* Slides the item to the right */
+}
+
+.nav-item span {
+    opacity: 0; /* Hidden by default */
+    position: absolute;
+    left: 80px; /* Positioned to the right of the icon */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.sidebar:hover .nav-item span {
+    opacity: 1; /* Shows the text when the entire sidebar is hovered */
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background: #60a5fa;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover::before {
+    background: #93c5fd;
+    box-shadow: 0 0 20px #93c5fd;
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 5px #60a5fa; }
+    50% { box-shadow: 0 0 20px #60a5fa; }
+    100% { box-shadow: 0 0 5px #60a5fa; }
+}
+
+/* === NEW SIDEBAR STYLES FROM styles.css END === */
+/* Clock Styles */
+.clock-container {
+    width: 100%;
+    min-height: 10vh;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    position: relative;
+    gap: 10px;
+}
+    
+#time {
+    display: flex;
+    gap: 20px;
+    color: #fff;
+}
+    
+#time .circle {
+    position: relative;
+    width: 75px;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+    
+#time .circle svg {
+    position: relative;
+    width: 75px;
+    height: 75px;
+    transform: rotate(270deg);
+}
+
+#time .circle svg circle {
+    width: 100%;
+    height: 100%;
+    fill: transparent;
+    stroke: #191919;
+    stroke-width: 2px;
+    transform: translate(2.5px, 2.5px);
+}
+
+#time .circle svg circle:nth-child(2) {
+    stroke: var(--color);
+    stroke-dasharray: 220;
+}
+
+#time div {
+    position: absolute;
+    text-align: center;
+    font-size: 0.5rem;
+    font-weight: 500;
+}
+
+#time .ap {
+    position: relative;
+    font-size: 0.5rem;
+    transform: translate(-10px);
+}
+
+.dots {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+}
+
+.dots::before {
+    content: '';
+    position: absolute;
+    top: -1.5px;
+    width: 7.5px;
+    height: 7.5px;
+    background: var(--color);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--color), 0 0 30px var(--color);
+}
+
+/* Progress Bar Styles */
+.progress-container {
+    margin-top: 10px;
+    width: 275px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.progress-label {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #333;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+}
+
+.night-segment {
+    height: 100%;
+    background-color: #8686f0;
+    border-radius: 4px 0 0 4px;
+    transition: width 1s ease;
+}
+
+.day-segment {
+    height: 100%;
+    background-color: #ffd700;
+    border-radius: 0 4px 4px 0;
+    transition: width 1s ease;
+}
+
+.progress-info {
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 1.5rem;
+}
+
+
+
+
+
+/* Media Query: Stack columns on smaller screens */
+@media (max-width: 1150px) {
+    .main-two-column-layout {
+        grid-template-columns: 1fr; 
+    }
+    #left-panel, #right-panel {
+        width: 100%; 
+    }
+    .solar-chart-container {
+        height: 350px; 
+    }
+    .solar-footer span {
+        float: none;
+        display: block;
+        text-align: center;
+    }
+    #last-updated-time {
+        float: none;
+        display: block;
+        text-align: center;
+    }
+}
