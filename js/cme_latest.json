@@ -1,20 +1,26 @@
 {
-  "activity_id": "2025-10-23T14:12:00-CME-001",
-  "start_time": "2025-10-23T14:12Z",
-  "source_location": "N25W140",
-  "speed": 335.0,
-  "type": "S",
-  "latitude": -10.0,
-  "longitude": 148.0,
-  "half_angle": 40.0,
-  "note": "CME visible to the west in SOHO LASCO C2 and STEREO A COR2. The source is likely an eruption from former AR 14246, which rotated off of the Earth-facing disk on 2025-10-18. Opening field lines and post eruption arcades are visible near the west limb in STEREO A EUV 195 imagery starting at 2025-10-23T13:55Z.",
+  "activity_id": "2025-10-25T11:12:00-CME-001",
+  "start_time": "2025-10-25T11:12Z",
+  "source_location": "N24W186",
+  "speed": 990.0,
+  "type": "C",
+  "latitude": 30.0,
+  "longitude": -176.0,
+  "half_angle": 44.0,
+  "note": "Bright and wide far-sided partial halo CME seen to the NNW in STEREO A COR2 and as a N halo (slightly to the NNE) in SOHO LASCO and GOES CCOR-1, with a very wide shock and immediately following somewhat narrower bulk, possibly with two lobes. Its source is a significant restructuring of magnetic field far behind the NW limb seen in STEREO A EUV 195 at 2025-10-25T11:05Z (and possibly a minor ejecta from behind the NW limb seen in STEREO EUVI 304 at 2025-10-25T11:15Z. Coronal signatures are also more faintly seen in GOES SUVI 284 to the NNW as fast opening of field lines behind the limb after 2025-10-25T11:30Z.",
   "instruments": [
     {
       "displayName": "SOHO: LASCO/C2"
     },
     {
+      "displayName": "SOHO: LASCO/C3"
+    },
+    {
       "displayName": "STEREO A: SECCHI/COR2"
+    },
+    {
+      "displayName": "GOES: CCOR-1"
     }
   ],
-  "fetch_time": "2025-10-23T16:48:11.021110"
+  "fetch_time": "2025-10-25T11:00:05.167963"
 }

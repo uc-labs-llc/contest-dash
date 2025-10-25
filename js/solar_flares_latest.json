@@ -1,11 +1,11 @@
 {
-  "activity_id": "2025-10-16T00:17:00-FLR-001",
-  "start_time": "2025-10-16T00:17Z",
-  "peak_time": "2025-10-16T00:21Z",
-  "end_time": "2025-10-16T00:24Z",
-  "class_type": "M1.1",
-  "source_location": "N25W55",
+  "activity_id": "2025-10-18T00:23:00-FLR-001",
+  "start_time": "2025-10-18T00:23Z",
+  "peak_time": "2025-10-18T00:40Z",
+  "end_time": "2025-10-18T00:49Z",
+  "class_type": "M1.0",
+  "source_location": "N24W82",
   "active_region": 14246,
   "linked_events": null,
-  "fetch_time": "2025-10-23T16:48:11.868558"
+  "fetch_time": "2025-10-25T11:00:05.845125"
 }

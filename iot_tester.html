@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IoT Systems Tester (Greenhouse Fan & Sprinklers)</title>
+<link rel="stylesheet"href="css/iot_tester.css">   
+<link rel="stylesheet"href="css/styles.css">
+    <link rel="stylesheet"href="css/sprinklers.css">  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.45/moment-timezone-with-data.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <style>
@@ -21,12 +26,99 @@
             text-shadow: 0 0 5px rgba(59, 130, 246, 0.7);
         }
     </style>
-</head>
-<body class="bg-gray-800 flex items-center justify-center min-h-screen p-4">
 
+</head>
+
+
+
+<body class="bg-gray-800 flex items-center justify-center min-h-screen p-4">
+  <div class="container">
+
+<div class="sidebar">
+  <img src="images/notb.png" alt="Logo" class="sidebar-logo">
+  <a href="index.html" class="nav-item" data-page="home">
+    <span>HOME</span>
+  </a>
+  <a href="con-sites.html" class="nav-item" data-page="page2">
+    <span>CON-SITES</span>
+  </a>
+  <a href="satellites.html" class="nav-item" data-page="page3">
+    <span>SATELLITE</span>
+  </a>
+  <a href="suntracker.html" class="nav-item" data-page="page4">
+    <span>SunTracker</span>
+  </a>
+<a href="moontracker.html" class="nav-item" data-page="page5">
+    <span>MoonTracker</span>
+  </a>
+
+  <a href="../nasa/dashboard.html" class="nav-item" data-page="page6">
+    <span>NASA</span>
+  </a>
+<a href="sprinklers.html" class="nav-item" data-page="page7">
+    <span>Sprinkler</span>
+  </a>
+<a href="iot_tester.html" class="nav-item" data-page="page7">
+    <span>API END POINT</span>
+  </a>
+
+
+</div>
+
+
+<div class="max-w-full w-full mx-auto mb-6">        
+<div id="info">
+            <h2>Los Ebanos, Texas -- API Weather Platform</h2>
+            <div class="clock-container">
+                <div id="time">
+                    <div class="circle" style="--color: #0096FF">
+                        <div class="dots h_dot"></div>
+                        <svg>
+                            <circle cx="35" cy="35" r="35"></circle>
+                            <circle cx="35" cy="35" r="35" id="hh"></circle>
+                        </svg>
+                        <div id="hours">00</div>
+                    </div>
+                    <div class="circle" style="--color: #0096FF">
+                        <div class="dots m_dot"></div>
+                        <svg>
+                            <circle cx="35" cy="35" r="35"></circle>
+                            <circle cx="35" cy="35" r="35" id="mm"></circle>
+                        </svg>
+                        <div id="minutes">00</div>
+                    </div>
+                    <div class="circle" style="--color: #0096FF">
+                        <div class="dots s_dot"></div>
+                        <svg>
+                            <circle cx="35" cy="35" r="35"></circle>
+                            <circle cx="35" cy="35" r="35" id="ss"></circle>
+                        </svg>
+                        <div id="seconds">00</div>
+                    </div>
+                    <div class="ap">
+                        <div id="ampm">AM</div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">Day/Night Progress (Texas)</div>
+                    <div class="progress-bar">
+                        <div class="night-segment" id="night"></div>
+                        <div class="day-segment" id="day"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span id="night-text">Night</span>
+                        <span id="day-text">Day</span>
+                    </div>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+            <script src="js/clock.js"></script>
+        </div>
+    </div>
     <div class="max-w-xl w-full mx-auto bg-gray-900 p-8 rounded-xl shadow-2xl border border-gray-700">
+        
         <h2 class="text-3xl font-extrabold mb-6 text-white text-center">
-            IoT Systems Test Environment & Email Alerts
+           
         </h2>
         
         <div class="mb-8 text-center">
@@ -80,19 +172,25 @@
         </div>
 
         <h3 class="text-lg font-semibold mb-2 text-gray-300">Transaction Log:</h3>
-        <textarea id="log-output" class="w-full h-40 p-3 border border-gray-600 rounded-md text-sm font-mono bg-gray-900 text-green-400 resize-none" readonly>System ready. Press "Start API Test" to begin Beeceptor.com API CALL.</textarea>
+        <textarea id="log-output" class="w-full h-40 p-3 border border-gray-600 rounded-md text-sm font-mono bg-gray-900 text-green-400 resize-none" readonly>System ready. Press "Start API Test" to begin Mockoon/Beeceptor API CALL.</textarea>
         
         <p class="text-xs text-gray-500 mt-3 text-center">
-            Beeceptor (IoT API) calls are primary. PHP handler (Email) calls are secondary.
+            Mockoon/Beeceptor (IoT API) calls are primary. PHP handler (Email) calls are secondary.
         </p>
     </div>
 
     <script>
         // --- CONFIGURATION ---
-        const FAN_URL = 'https://greenhouse-fan-mock.free.beeceptor.com/api/fan_control'; 
-        const SPRINKLER_URL = 'https://greenhouse-fan-mock.free.beeceptor.com/api/sprinkler_control';
-        const EMAIL_HANDLER_URL = 'send_iot_alert.php'; // 🚨 NEW: Path to your PHP script
-        
+        // Mockoon/IoT API calls
+        const BASE_URL = 'http://localhost:8080'; 
+        // CRITICAL: Change this to the URL of your PHP server (e.g., http://192.168.1.100 or http://localhost:80)
+        const PHP_SERVER_URL = 'http://localhost/dash-email'; 
+
+        const FAN_URL = `${BASE_URL}/api/fan-control`; 
+        const SPRINKLER_URL = `${BASE_URL}/api/sprinkler-control`;
+        // UPDATED: Points to the new PHP script on your PHP server
+        const EMAIL_HANDLER_URL = `${PHP_SERVER_URL}/send_iot_email.php`; 
+
         const TEMP_THRESHOLD = 85; 
         const RAINFALL_THRESHOLD = 0.50; 
         const CHECK_INTERVAL = 5000; // 5 seconds
@@ -157,7 +255,7 @@
                 }
             })
             .catch(error => {
-                log(`EMAIL: Network Error calling PHP handler: ${error.message}. (Server must be running PHP)`, true);
+                log(`EMAIL: Network Error calling PHP handler: ${error.message}. (Ensure PHP server is running on ${PHP_SERVER_URL} and 'send_iot_email.php' is accessible)`, true);
             });
         }
         // ---------------------------------
@@ -181,7 +279,7 @@
             })
             .then(response => {
                 if (response.ok) {
-                    log(`FAN: SUCCESS [${state}] sent to Beeceptor. HTTP ${response.status}`);
+                    log(`FAN: SUCCESS [${state}] sent to Mockoon. HTTP ${response.status}`);
                     fanState = state; 
                     updateFanStatusDisplay(state); 
                     
@@ -196,7 +294,7 @@
                 return response.json();
             })
             .then(data => { log(`FAN: Mock Response: ${JSON.stringify(data)}`); })
-            .catch(error => { log(`FAN: Network Error: ${error.message}`, true); });
+            .catch(error => { log(`FAN: Network Error calling Mockoon: ${error.message}`, true); });
         }
 
         function sendSprinklerCommand(state, rainfall) {
@@ -216,7 +314,7 @@
             })
             .then(response => {
                 if (response.ok) {
-                    log(`SPRINKLER: SUCCESS [${state}] sent to Beeceptor. HTTP ${response.status}`);
+                    log(`SPRINKLER: SUCCESS [${state}] sent to Mockoon. HTTP ${response.status}`);
                     sprinklerState = state; 
                     updateSprinklerStatusDisplay(state); 
                     
@@ -231,7 +329,7 @@
                 return response.json();
             })
             .then(data => { log(`SPRINKLER: Mock Response: ${JSON.stringify(data)}`); })
-            .catch(error => { log(`SPRINKLER: Network Error: ${error.message}`, true); });
+            .catch(error => { log(`SPRINKLER: Network Error calling Mockoon: ${error.message}`, true); });
         }
         
         // --- SYSTEM CHECK & MASTER CONTROL (same as before) ---
